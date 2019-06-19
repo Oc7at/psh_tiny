@@ -18,7 +18,11 @@ pub fn print_relationship_full(relationships: &String, relation: &str) {
 }
 pub fn print_relationship_elem(relationships: &String, relation: &str, elem: &str) {
     let v: Value = serde_json::from_str(relationships).unwrap();
-    println!("{}", &v[&relation][0][&elem]);
+    if v[&relation][0][&elem].is_string() {
+        println!("{}", &v[&relation][0][&elem].as_str().unwrap());
+    } else {
+        println!("{}", &v[&relation][0][&elem]);
+    }
 }
 pub fn print_relationships(relationships: &String) {
     let v: Value = serde_json::from_str(relationships).unwrap();
