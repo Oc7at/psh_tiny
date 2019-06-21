@@ -3,7 +3,7 @@ mod printer;
 use clap::ArgMatches;
 
 pub fn run_relationships<'a>(matches: &ArgMatches<'a>) {
-    let relationships = psh_config::get_json_from_platform_var("PLATFORM_RELATIONSHIPS");
+    let relationships = psh_config::get_json_from_var("PLATFORM_RELATIONSHIPS");
     if matches.is_present("relation") {
         if matches.is_present("element") {
             printer::print_relationship_elem(
