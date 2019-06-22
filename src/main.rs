@@ -20,6 +20,10 @@ pub fn run_relationships<'a>(matches: &ArgMatches<'a>) {
 }
 
 fn main() {
+    if !psh_config::is_valid_platform() {
+        println!("This is not a valid Platform.sh environment.");
+        std::process::exit(1)
+    }
     let matches = args::arg_parser();
     if let Some(matches) = matches.subcommand_matches("relationships") {
         run_relationships(matches);
