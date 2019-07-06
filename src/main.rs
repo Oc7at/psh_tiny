@@ -23,6 +23,11 @@ pub fn run_relationships<'a>(matches: &ArgMatches<'a>) {
     }
 }
 
+pub fn run_routes<'a>(matches: &ArgMatches<'a>) {
+    let routes = psh_config::get_json_from_var("PLATFORM_ROUTES").unwrap();
+    dbg!(routes);
+}
+
 fn main() {
     if !psh_config::is_valid_platform() {
         println!("This is not a valid Platform.sh environment.");
@@ -31,5 +36,7 @@ fn main() {
     let commands = args::arg_parser();
     if let Some(matches) = commands.subcommand_matches("relationships") {
         run_relationships(matches);
+    } else if let Some(matches) = commands.subcommand_matches("routes") {
+        run_routes(matches);
     }
 }

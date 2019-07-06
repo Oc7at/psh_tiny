@@ -19,5 +19,13 @@ pub fn arg_parser() -> ArgMatches<'static> {
                         .required(false),
                 ),
         )
+        .subcommand(
+            SubCommand::with_name("routes").arg(
+                Arg::with_name("id")
+                    .help("the id of the route to get")
+                    .index(1)
+                    .required(false),
+            ),
+        )
         .get_matches()
 }
