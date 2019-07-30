@@ -16,7 +16,7 @@ pub fn run_relationships<'a>(matches: &ArgMatches<'a>) -> Option<bool> {
     } else {
         printer::print_relationships(&services)
     }
-    return None;
+    None
 }
 
 pub fn run_routes<'a>(matches: &ArgMatches<'a>) -> Option<bool> {
