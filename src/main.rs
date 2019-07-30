@@ -2,34 +2,43 @@ mod args;
 mod printer;
 use clap::ArgMatches;
 
-pub fn run_relationships<'a>(matches: &ArgMatches<'a>) {
-    let relationships = psh_config::get_json_from_var("PLATFORM_RELATIONSHIPS").unwrap();
+pub fn run_relationships<'a>(matches: &ArgMatches<'a>) -> Option<bool> {
+    let services = psh_config::service::get_services()?;
+
     if matches.is_present("relation") {
-        if !psh_config::has_relationship(matches.value_of("relation").unwrap()) {
-            println!("This relationship does not exist.");
-            std::process::exit(1);
-        }
-        if matches.is_present("element") {
-            printer::print_relationship_elem(
-                &relationships,
-                matches.value_of("relation").unwrap(),
-                matches.value_of("element").unwrap(),
-            );
-        } else {
-            printer::print_relationship_full(&relationships, matches.value_of("relation").unwrap());
-        }
+        let relation = matches.value_of("relation").unwrap();
+        let service = match services.get(relation) {
+            Some(a) => a,
+            None => return None,
+        };
+        printer::print_relationship(&service, relation);
+        return Some(true);
     } else {
-        printer::print_relationships(&relationships)
+        printer::print_relationships(&services)
     }
+    return None;
 }
 
-pub fn run_routes<'a>(matches: &ArgMatches<'a>) {
-    let routes = psh_config::get_json_from_var("PLATFORM_ROUTES").unwrap();
-    dbg!(routes);
+pub fn run_routes<'a>(matches: &ArgMatches<'a>) -> Option<bool> {
+    let routes = psh_config::route::get_routes().unwrap();
+    if matches.is_present("id") {
+        let req_route = matches.value_of("id").unwrap();
+        let route = match routes.get(req_route) {
+            Some(a) => a,
+            None => return None,
+        };
+        printer::print_route(route);
+        return Some(true);
+    } else {
+        for (name, route) in routes {
+            println!("{}: {}", name, route);
+        }
+    }
+    None
 }
 
 fn main() {
-    if !psh_config::is_valid_platform() {
+    if !psh_config::config::is_valid_platform() {
         println!("This is not a valid Platform.sh environment.");
         std::process::exit(1)
     }
